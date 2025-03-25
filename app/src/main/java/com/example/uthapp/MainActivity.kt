@@ -11,7 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.uthapp.navigation.Screen
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.example.uthapp.screens.*
 import com.example.uthapp.ui.theme.UTHappTheme
 
@@ -27,48 +28,42 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.Splash.route
-                    ) {
-                        composable(Screen.Splash.route) {
+                    NavHost(navController = navController, startDestination = "splash") {
+                        composable("splash") {
                             SplashScreen(
                                 onNavigateToFirst = {
-                                    navController.navigate(Screen.First.route) {
-                                        popUpTo(Screen.Splash.route) { inclusive = true }
+                                    navController.navigate("onboarding") {
+                                        popUpTo("splash") { inclusive = true }
                                     }
                                 }
                             )
                         }
-                        
-                        composable(Screen.First.route) {
-                            FirstScreen(
-                                onNavigateToSecond = {
-                                    navController.navigate(Screen.Second.route)
-                                },
-                                onNavigateBack = {
-                                    navController.popBackStack()
-                                }
-                            )
-                        }
-                        
-                        composable(Screen.Second.route) {
-                            SecondScreen(
-                                onNavigateToThird = {
-                                    navController.navigate(Screen.Third.route)
-                                },
-                                onNavigateBack = {
-                                    navController.popBackStack()
-                                }
-                            )
-                        }
-                        
-                        composable(Screen.Third.route) {
-                            ThirdScreen(
+                        composable("onboarding") {
+                            OnboardingScreen(
                                 onNavigateToHome = {
-                                    // TODO: Navigate to home screen
-                                },
-                                onNavigateBack = {
+                                    navController.navigate("home") {
+                                        popUpTo("splash") { inclusive = true }
+                                    }
+                                }
+                            )
+                        }
+                        composable("home") {
+                            HomeScreen(
+                                onTaskClick = { taskId ->
+                                    navController.navigate("task_detail/$taskId")
+                                }
+                            )
+                        }
+                        composable(
+                            route = "task_detail/{taskId}",
+                            arguments = listOf(navArgument("taskId") { type = NavType.IntType })
+                        ) { backStackEntry ->
+                            val taskId = backStackEntry.arguments?.getInt("taskId") ?: return@composable
+                            TaskDetailScreen(
+                                taskId = taskId,
+                                onBackClick = { navController.popBackStack() },
+                                onDeleteClick = {
+                                    // TODO: Handle delete
                                     navController.popBackStack()
                                 }
                             )
