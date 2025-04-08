@@ -1,3 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">UTHapp</string>
+    <string name="empty_task_message">Không có công việc nào</string>
+    <string name="profile_title">Thông tin cá nhân</string>
+    <string name="back">Quay lại</string>
+    <string name="sign_out">Đăng xuất</string>
+    <string name="no_name">Chưa có tên</string>
+    <string name="no_email">Chưa có email</string>
 </resources>
